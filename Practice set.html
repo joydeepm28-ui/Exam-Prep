@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-family:system-ui,sans-serif;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Foundations Exam Prep</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a study desk. Sticky top bar with three tabs; one centered 960px column; question runner as a focused sheet. */
+:root{
+  --bg:#EEF2F1; --surface:#FFFFFF; --sunk:#E3E9E7; --fg:#14232B; --muted:#5A6B70; --line:#CDD7D5;
+  --accent:#0B6E64; --accent-ink:#FFFFFF; --accent-soft:#D5ECE8;
+  --good:#2C7A47; --good-soft:#DCEFE2; --bad:#B03C2B; --bad-soft:#F6DFDA; --warn:#9A6512; --warn-soft:#F4E7CF;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1518; --surface:#162126; --sunk:#1D2A30; --fg:#E4ECEA; --muted:#93A5A8; --line:#2A3A40;
+  --accent:#4BC0AE; --accent-ink:#06201C; --accent-soft:#183A36;
+  --good:#5CC27F; --good-soft:#18352A; --bad:#EE7C69; --bad-soft:#3D221E; --warn:#E0A84B; --warn-soft:#3A2D16; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1518; --surface:#162126; --sunk:#1D2A30; --fg:#E4ECEA; --muted:#93A5A8; --line:#2A3A40;
+  --accent:#4BC0AE; --accent-ink:#06201C; --accent-soft:#183A36;
+  --good:#5CC27F; --good-soft:#18352A; --bad:#EE7C69; --bad-soft:#3D221E; --warn:#E0A84B; --warn-soft:#3A2D16; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:10px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand small{font-family:var(--f-mono);font-size:11px;color:var(--muted);letter-spacing:.06em;font-weight:500}
+nav.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px}
+nav.tabs a{color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:999px;font-weight:700;font-size:14px}
+nav.tabs a[aria-current="page"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+main{padding-block:28px 64px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.015em}
+h1{font-size:30px;font-weight:700;line-height:1.15}
+h2{font-size:20px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+.eyebrow{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.lede{color:var(--muted);max-width:62ch;margin:6px 0 0}
+.stack{display:flex;flex-direction:column;gap:24px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+button,.btn{font:inherit;font-weight:700;font-size:15px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:9px 16px;cursor:pointer}
+button:hover{border-color:var(--muted)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.primary:hover{filter:brightness(1.07)}
+button.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+button.danger{color:var(--bad);border-color:var(--bad)}
+button:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+select{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.kpi .v{font-family:var(--f-mono);font-size:28px;line-height:1.1;margin-top:6px}
+.kpi .s{color:var(--muted);font-size:13px;margin-top:4px}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;font-weight:500}
+.pill.pass{background:var(--good-soft);color:var(--good)}
+.pill.fail{background:var(--bad-soft);color:var(--bad)}
+.pill.none{background:var(--sunk);color:var(--muted)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.domains{display:flex;flex-direction:column}
+.drow{display:grid;grid-template-columns:44px minmax(0,1fr) 140px 64px;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.drow:first-child{border-top:0}
+.dcode{font-family:var(--f-mono);font-size:13px;color:var(--accent);font-weight:500}
+.dname{font-weight:700;min-width:0}
+.dmeta{font-size:13px;color:var(--muted)}
+.bar{height:8px;background:var(--sunk);border-radius:999px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+.bar.target::after{content:"";position:absolute;left:72%;top:-3px;bottom:-3px;width:2px;background:var(--fg);opacity:.35}
+.dpct{text-align:right;font-family:var(--f-mono);font-size:14px}
+.chart svg{width:100%;height:auto;display:block}
+.hist{width:100%;border-collapse:collapse;font-size:14px}
+.hist th{text-align:left;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;padding:8px 8px 8px 0;border-bottom:1px solid var(--line)}
+.hist td{padding:9px 8px 9px 0;border-bottom:1px solid var(--line)}
+.tablewrap{overflow-x:auto}
+.empty{border:1px dashed var(--line);border-radius:var(--r);padding:24px;color:var(--muted);text-align:left}
+
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:10px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.card .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.opts{display:flex;gap:16px;flex-wrap:wrap;align-items:end}
+.opts label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);font-weight:700}
+
+/* runner */
+.runner{max-width:760px;margin:0 auto}
+.rhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.rhead .grow{margin-right:auto}
+.progress{height:4px;background:var(--sunk);border-radius:999px;overflow:hidden;margin-bottom:18px}
+.progress i{display:block;height:100%;background:var(--accent)}
+.timer{font-family:var(--f-mono);font-size:15px;padding:4px 10px;border-radius:6px;background:var(--sunk)}
+.timer.low{background:var(--warn-soft);color:var(--warn)}
+.qtext{white-space:pre-line;font-size:19px;line-height:1.45;margin:0 0 6px;font-weight:700;max-width:65ch}
+.qhint{font-size:13px;color:var(--warn);font-weight:700;margin-bottom:12px}
+.choices{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.choice{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:8px;background:var(--surface);font-weight:400;font-size:16px;line-height:1.4}
+.choice .k{font-family:var(--f-mono);font-size:13px;flex:0 0 26px;height:26px;border-radius:6px;display:grid;place-items:center;background:var(--sunk);color:var(--muted)}
+.choice[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.choice[aria-pressed="true"] .k{background:var(--accent);color:var(--accent-ink)}
+.choice.correct{border-color:var(--good);background:var(--good-soft)}
+.choice.correct .k{background:var(--good);color:var(--surface)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.choice.wrong .k{background:var(--bad);color:var(--surface)}
+.choice:disabled{opacity:1;cursor:default}
+.explain{border-left:3px solid var(--accent);background:var(--sunk);padding:12px 14px;border-radius:0 8px 8px 0;margin:6px 0 14px}
+.explain b{display:block;margin-bottom:2px}
+.navgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;margin-top:18px}
+.navgrid button{padding:6px 0;font-family:var(--f-mono);font-size:13px;font-weight:500;border-radius:6px}
+.navgrid button.ans{background:var(--accent-soft);border-color:var(--accent)}
+.navgrid button.cur{outline:2px solid var(--fg);outline-offset:1px}
+.navgrid button.flag{border-color:var(--warn);box-shadow:inset 0 -3px 0 var(--warn)}
+.confirm{border:1.5px solid var(--warn);background:var(--warn-soft);border-radius:8px;padding:14px;margin-top:14px}
+.score-hero{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.score-big{font-family:var(--f-mono);font-size:56px;line-height:1}
+.score-big small{font-size:20px;color:var(--muted)}
+.review{display:flex;flex-direction:column;gap:12px}
+.ritem{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--surface)}
+.ritem .qtext{font-size:16px}
+.ritem ul{margin:8px 0;padding-left:18px}
+.ritem li.c{color:var(--good);font-weight:700}
+.ritem li.x{color:var(--bad);text-decoration:line-through}
+.note{font-size:13px;color:var(--muted)}
+.banner{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);padding:12px 16px}
+.banner span{margin-right:auto}
+@media (max-width:720px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .drow{grid-template-columns:36px minmax(0,1fr) 56px}
+  .drow .bar{grid-column:2 / 4}
+  h1{font-size:25px}
+  .score-big{font-size:44px}
+}
+@media (prefers-reduced-motion:no-preference){.bar i,.progress i{transition:width .35s ease}}
+</style>
+
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="brand">Foundations Prep <small>CCAO-F</small></div>
+  <nav class="tabs" aria-label="Sections">
+    <a href="#dashboard" data-v="dashboard">Dashboard</a>
+    <a href="#practice" data-v="practice">Practice</a>
+    <a href="#exams" data-v="exams">Full exams</a>
+  </nav>
+</div></header>
+<main class="wrap" id="app"></main>
+
+<script>
+const QUESTIONS = [
+// Set 1 (uploaded Set-1.docx; same content as Amey Thakur mock exam 1, MIT licence)
+{"d": 2, "q": "A colleague shares a Claude-drafted policy summary that reads well and cites three internal documents by name. What is the appropriate review step before it circulates to the whole department?", "o": ["Circulate it, since the named sources demonstrate grounding", "Ask Claude to double-check its own work and circulate if it agrees", "Confirm each named document exists and says what the summary claims", "Add a disclaimer that the summary was AI-generated and circulate"], "a": [2], "e": "Named sources can be fabricated; verification against the actual documents is the diligence step. Self-checking (B) is not independent evidence, and a disclaimer (D) does not make content correct", "s": "amey", "ref": "Set 1, Q1", "set": "1", "fixed": 1},
+{"d": 1, "q": "You need a first draft of a stakeholder update from a long project log. Which prompt is most likely to produce a usable draft on the first attempt?", "o": ["\"Summarize this project log.\"", "\"Write something good about this project log for my boss.\"", "\"Summarize this project log. Be detailed and thorough and professional.\"", "\"You are writing a weekly update for non-technical executives. From the log, produce: status in one line, three progress items, two risks with owners, and next week's focus. Keep it under 200 words.\""], "a": [3], "e": "Role, audience, explicit structure, and length constraints are what turn a vague request into a usable draft. Intensifiers like \"detailed and thorough\" (C) add no structure", "s": "amey", "ref": "Set 1, Q2", "set": "1", "fixed": 1},
+{"d": 3, "q": "A workflow drafts hundreds of routine appointment confirmations each day. Latency and cost dominate; the language is formulaic. Which choice fits?", "o": ["A fast, low-cost model, reserving a more capable one for exceptions", "The most capable model, for consistency", "Whichever model is newest", "Alternate between models to spread cost"], "a": [0], "e": "Match the model tier to the work: fast and cheap for formulaic volume, capable for exceptions", "s": "amey", "ref": "Set 1, Q3", "set": "1", "fixed": 1},
+{"d": 5, "q": "Your team's Project answers questions from a product manual. Users report confident answers about a feature that was removed last quarter. What is the most likely cause?", "o": ["The model needs retraining", "The Project's knowledge still contains the outdated manual", "Users are asking the questions wrong", "The context window is too small"], "a": [1], "e": "Project knowledge is maintained by you; stale documents produce confidently outdated answers", "s": "amey", "ref": "Set 1, Q4", "set": "1", "fixed": 1},
+{"d": 6, "q": "Legal asks you to analyze a spreadsheet of support tickets containing customer names and email addresses. Your organization prohibits sending personal data to external tools. What do you do?", "o": ["Upload it, since legal requested the analysis", "Upload it and ask Claude to disregard the personal columns", "Strip or pseudonymize the personal columns, then analyze what remains", "Tell legal the analysis is not possible"], "a": [2], "e": "Make the task compliant, then do it. A requester's seniority does not override policy, and instructing the model to ignore data does not un-send it", "s": "amey", "ref": "Set 1, Q5", "set": "1", "fixed": 1},
+{"d": 1, "q": "Claude produces a five-paragraph answer when you needed three bullet points, twice in a row. What is the most effective adjustment?", "o": ["Ask again and hope for variation", "Switch to a more capable model", "Manually reformat each response", "State the format explicitly, including the number of bullets and their maximum length"], "a": [3], "e": "Format failures are fixed by stating the format, not by re-rolling or upgrading the model", "s": "amey", "ref": "Set 1, Q6", "set": "1", "fixed": 1},
+{"d": 2, "q": "Which of these is the strongest signal that a Claude-generated claim needs verification before use?", "o": ["The claim is a specific number, date, or citation that would matter if wrong", "The answer is long", "The answer was produced quickly", "The answer uses technical vocabulary"], "a": [0], "e": "Specific, consequential details are the highest-risk surface for fabrication. Length, speed, and vocabulary carry no accuracy signal", "s": "amey", "ref": "Set 1, Q7", "set": "1", "fixed": 1},
+{"d": 4, "q": "A manager wants to know whether Claude can \"replace our weekly reporting process.\" What is the most useful response?", "o": ["Yes, automation is what AI is for", "A breakdown of which reporting steps Claude can draft or summarize, which need human judgment or system access, and what the review step would be", "No, reporting requires human oversight", "A recommendation to hire a consultant"], "a": [1], "e": "The valued skill is a realistic division of labor with a review step, not a yes or a no", "s": "amey", "ref": "Set 1, Q8", "set": "1", "fixed": 1},
+{"d": 5, "q": "You are configuring a Project that several colleagues will use for consistent client communications. What belongs in the Project instructions rather than in each individual prompt?", "o": ["The specific client's name for today's message", "Today's date", "The house tone, required disclaimers, and the standard structure of a client message", "The colleague's personal writing preferences"], "a": [2], "e": "Durable, shared conventions belong in instructions; per-message specifics belong in the prompt", "s": "amey", "ref": "Set 1, Q9", "set": "1", "fixed": 1},
+{"d": 2, "q": "A summary Claude produced omits a material caveat that appears in the source document. What does this failure mode illustrate?", "o": ["Hallucination through fabricated detail", "A context window limit", "A prompt injection attack", "Omission, which requires reading the source rather than only reviewing the output"], "a": [3], "e": "Omission is as damaging as fabrication and is only visible if you read the source, not just the output", "s": "amey", "ref": "Set 1, Q10", "set": "1", "fixed": 1},
+{"d": 7, "q": "Your prompt worked well last month and now returns weaker results after your team added twelve documents to the Project's knowledge. What is the first thing to investigate?", "o": ["Whether the new documents are diluting or contradicting the sources the answers should use", "Whether the model changed", "Whether colleagues are using different browsers", "Whether the prompt should be longer"], "a": [0], "e": "Diagnose the change that coincided with the regression before rewriting anything", "s": "amey", "ref": "Set 1, Q11", "set": "1", "fixed": 1},
+{"d": 4, "q": "For which task is a Project with persistent instructions and knowledge clearly better than a one-off chat?", "o": ["Asking for a synonym", "A monthly report that follows the same structure and draws on the same reference documents", "Checking a single fact", "Rewriting one email"], "a": [1], "e": "Repeated work with stable context and structure is exactly what Projects are for", "s": "amey", "ref": "Set 1, Q12", "set": "1", "fixed": 1},
+{"d": 2, "q": "Which practice best reduces the risk of sharing an inaccurate Claude output with a customer?", "o": ["Reading the output for tone before sending", "Sending it with a note that AI assisted", "Verifying the claims that would cause harm if wrong, then having a second person review customer-facing material", "Using the largest available model"], "a": [2], "e": "Verification of consequential claims plus human review for customer-facing material. Model size is not a control", "s": "amey", "ref": "Set 1, Q13", "set": "1", "fixed": 1},
+{"d": 4, "q": "You want Claude to help redesign a slow approval process rather than just speed up its current steps. Which prompt direction fits that goal?", "o": ["\"Make our approval process faster.\"", "\"Automate our approvals.\"", "\"What do other companies do for approvals?\"", "\"Here are the current approval steps and where delays occur. Propose two redesigns: one that keeps the current structure and one that reorders or removes steps, with the tradeoffs of each.\""], "a": [3], "e": "Process redesign requires giving Claude the current steps, the pain points, and asking for alternatives with tradeoffs", "s": "amey", "ref": "Set 1, Q14", "set": "1", "fixed": 1},
+{"d": 6, "q": "Which situation most clearly calls for escalating to a technical colleague rather than solving it yourself?", "o": ["A request to connect Claude directly to the company's internal order database through an integration", "A prompt that needs better structure", "An output with the wrong tone", "A Project that needs its knowledge updated"], "a": [0], "e": "System integrations belong to the Developer and Architect scope; recognizing that boundary is an Associate competency", "s": "amey", "ref": "Set 1, Q15", "set": "1", "fixed": 1},
+// Set 2 (uploaded Set-2.docx; Amey Thakur, MIT licence)
+{"d": 2, "q": "Claude returns a policy answer that matches your expectation exactly, with no citation. What does the match tell you?", "o": ["The answer is confirmed, since it agrees with your understanding", "The answer is probably correct but should be reworded", "Nothing about accuracy, because agreement with an expectation is not evidence", "The model has read the policy document"], "a": [2], "e": "Agreement with what you already believed is the easiest error to miss, since nothing prompts a check. Neither confirmation (A), rewording (B), nor an assumption about retrieval (D) establishes that the claim is true", "s": "amey", "ref": "Set 2, Q1", "set": "2", "fixed": 1},
+{"d": 2, "q": "A colleague asks Claude to check its own earlier answer, and it confirms the answer. How much weight does the confirmation carry?", "o": ["None on its own, because the check is not independent of the thing being checked", "Substantial, because the model reviewed its own reasoning", "Substantial if the confirmation is detailed", "It depends on the model used"], "a": [0], "e": "Self-review is not an independent source and cannot establish correctness. Detail (C) and model choice (D) do not make a self-check independent", "s": "amey", "ref": "Set 2, Q2", "set": "2", "fixed": 1},
+{"d": 2, "q": "A report drafted with Claude contains one figure you cannot verify from any available source. What is the appropriate handling before circulation?", "o": ["Circulate it with a general disclaimer about AI assistance", "Keep the figure and mark it as an estimate", "Ask Claude to provide a source and keep whatever it returns", "Remove the figure and note that it could not be verified"], "a": [3], "e": "An unverifiable claim should not be presented as fact, and a labeled gap is honest. A blanket disclaimer (A) does not address the specific figure, an unfounded estimate (B) misrepresents it, and a citation produced on demand (C) needs the same verification", "s": "amey", "ref": "Set 2, Q3", "set": "2", "fixed": 1},
+{"d": 4, "q": "Which of these is the strongest candidate to hand to Claude in a monthly close process?", "o": ["Approving the final journal entries", "Drafting the variance commentary from figures that are already agreed", "Deciding which variances require investigation", "Signing off the reconciliation"], "a": [1], "e": "Drafting from agreed inputs is bounded and checkable. Approval (A), sign-off (D), and the decision about what to investigate (C) all carry accountability", "s": "amey", "ref": "Set 2, Q4", "set": "2", "fixed": 1},
+{"d": 4, "q": "A workflow produces good output but nobody uses it. What should be examined first?", "o": ["Whether the model should be upgraded", "Whether the output arrives where the work actually happens, in a form people can act on", "Whether the prompt is long enough", "Whether more people need training"], "a": [1], "e": "Adoption usually fails on fit with the existing process rather than on output quality. Model (A) and prompt length (C) address quality that is already acceptable, and training (D) treats a symptom", "s": "amey", "ref": "Set 2, Q5", "set": "2", "fixed": 1},
+{"d": 6, "q": "A team wants to paste anonymised customer feedback into Claude for theme analysis. What remains a risk after names are removed?", "o": ["Nothing, since anonymisation removes the risk entirely", "The model may store the text permanently", "Theme analysis is unreliable on anonymised data", "Free text can still identify people through specific details, so review before sending is still needed"], "a": [3], "e": "Removing names does not remove identifying detail from free text, which is why a review step remains. Treating anonymisation as complete (A) is the error tested, and neither storage assumptions (B) nor reliability (C) is the governance issue here", "s": "amey", "ref": "Set 2, Q6", "set": "2", "fixed": 1},
+{"d": 6, "q": "Who should decide whether a Claude-assisted output is fit to send to a customer?", "o": ["The person accountable for the customer relationship", "Whoever wrote the prompt", "The model, if asked to assess its own output", "Nobody, if the workflow was approved in advance"], "a": [0], "e": "Accountability for the outgoing communication decides the question. Prompt authorship (B) is incidental, self-assessment (C) is not independent, and prior approval of a workflow (D) does not review this instance", "s": "amey", "ref": "Set 2, Q7", "set": "2", "fixed": 1},
+{"d": 1, "q": "A prompt works well until the input document is much longer than usual, when quality drops. What is the most likely explanation?", "o": ["The model became less capable", "The prompt is too short", "The relevant material is now competing with far more surrounding text", "Longer documents always produce worse output"], "a": [2], "e": "Dilution across a much longer input is the usual cause of this pattern. The model has not changed (A), prompt length (B) is not the variable that changed, and length alone is not determinative (D)", "s": "amey", "ref": "Set 2, Q8", "set": "2", "fixed": 1},
+{"d": 1, "q": "You want the same analysis applied to fifty documents with consistent output. What matters most?", "o": ["Using the largest model available", "Processing the documents in one conversation", "Reviewing only a sample of the outputs", "Fixing the prompt and the required output structure, and applying both unchanged to every document"], "a": [3], "e": "Consistency across a set comes from holding the instruction and the output shape constant. Model size (A) does not create consistency, one long conversation (B) invites drift, and sampling (C) is a review policy rather than a design", "s": "amey", "ref": "Set 2, Q9", "set": "2", "fixed": 1},
+{"d": 3, "q": "A task must return an answer within a second for an interactive interface, and the work is simple classification. What follows?", "o": ["Use the most capable model to be safe", "Batch the requests", "Use the smallest model that meets the accuracy requirement, since latency is the binding constraint", "Increase the context supplied"], "a": [2], "e": "With a hard latency requirement and a simple task, the smallest sufficient model is the fit. The most capable model (A) spends latency for accuracy that is not needed, batching (B) breaks interactivity, and more context (D) adds cost and time", "s": "amey", "ref": "Set 2, Q10", "set": "2", "fixed": 1},
+{"d": 3, "q": "What is the correct reading of a model's published benchmark score when choosing for a specific business task?", "o": ["It predicts performance on your task", "It is a general signal that does not substitute for evaluating on your own task", "It is irrelevant", "It determines the price you should expect to pay"], "a": [1], "e": "Benchmarks indicate general capability and cannot stand in for measurement on the actual task. Treating them as predictive (A) or irrelevant (C) are both wrong, and they do not set price (D)", "s": "amey", "ref": "Set 2, Q11", "set": "2", "fixed": 1},
+{"d": 5, "q": "Two teams keep separate copies of the same reference documents in their own projects. What is the main risk?", "o": ["The copies drift apart, and the two teams begin answering the same question differently", "Higher storage cost", "Slower responses", "The model becomes confused between projects"], "a": [0], "e": "Duplicated knowledge diverges as each copy is maintained separately, producing inconsistent answers. Storage (B) and speed (C) are minor, and projects do not leak into one another (D)", "s": "amey", "ref": "Set 2, Q12", "set": "2", "fixed": 1},
+{"d": 5, "q": "What is the right first step when setting up a project for a recurring task?", "o": ["Decide what the task needs to know every time, and add only that", "Upload every document the team owns", "Write the longest possible instruction", "Add documents as questions come up, without review"], "a": [0], "e": "A deliberate, minimal base keeps retrieval sharp and is maintainable. Uploading everything (B) and accumulating without review (D) both dilute, and instruction length (C) is not the question", "s": "amey", "ref": "Set 2, Q13", "set": "2", "fixed": 1},
+{"d": 7, "q": "A user reports that Claude gave a wrong answer, but you cannot reproduce it. What is the most useful next step?", "o": ["Assume the user made an error", "Obtain the exact prompt, inputs, and configuration they used", "Increase the model size for everyone", "Add a warning to the interface"], "a": [1], "e": "Reproduction depends on the exact conditions, and gathering them is the only way to diagnose. Dismissing the report (A) discards the signal, and a model change (C) or a warning (D) acts before the cause is known", "s": "amey", "ref": "Set 2, Q14", "set": "2", "fixed": 1},
+{"d": 7, "q": "Output quality varies between runs of an identical prompt on identical input. What does this indicate?", "o": ["The system is broken", "The temperature must be zero for all tasks", "Some variation is expected, and the task needs constraints tight enough that the variation does not matter", "The input must be shortened"], "a": [2], "e": "Generation is not deterministic, so the design must tolerate variation within acceptable bounds. Treating it as breakage (A) misreads normal behavior, a universal temperature rule (B) is too blunt, and input length (D) is unrelated", "s": "amey", "ref": "Set 2, Q15", "set": "2", "fixed": 1},
+// Set 3 (uploaded Set-3.docx; Amey Thakur, MIT licence)
+{"d": 2, "q": "A summary cites a statistic that turns out to be correct. Does that validate the rest of the summary?", "o": ["Yes, one verified claim indicates the whole is reliable", "Yes, if the statistic was the hardest claim", "No, each material claim needs its own check", "Only if the source was named"], "a": [2], "e": "Verification does not generalise from one claim to the others. Treating it as a proxy for the whole (A, B) is the error tested, and naming a source (D) does not verify the remaining claims", "s": "amey", "ref": "Set 3, Q1", "set": "3", "fixed": 1},
+{"d": 2, "q": "Claude declines to answer part of a request and explains why. How should this be read?", "o": ["As information about a limit or a policy that is worth understanding before proceeding", "As a failure that should be worked around", "As a sign the prompt was too long", "As a reason to switch models"], "a": [0], "e": "A refusal with a reason is a signal about the task, not an obstacle to route around. Working around it (B) ignores the reason, and neither prompt length (C) nor model choice (D) is indicated", "s": "amey", "ref": "Set 3, Q2", "set": "3", "fixed": 1},
+{"d": 2, "q": "You need to know whether a long report supports a specific conclusion. What is the most reliable approach?", "o": ["Ask for a summary and read that", "Ask whether the report supports the conclusion", "Ask for a confidence score", "Ask for the passages that bear on the conclusion, then read those passages yourself"], "a": [3], "e": "Retrieving the evidence and reading it keeps the judgment with you. A summary (A) and a direct verdict (B) hand the judgment to the model, and a confidence score (C) is not evidence", "s": "amey", "ref": "Set 3, Q3", "set": "3", "fixed": 1},
+{"d": 4, "q": "A manual process takes four hours and produces a document nobody reads. What should happen before automating it?", "o": ["Automate it, since four hours is significant", "Establish whether the document is needed at all", "Automate it and measure adoption afterwards", "Split it across more people"], "a": [1], "e": "Automating unnecessary work makes waste faster. Proceeding regardless (A, C) skips the question, and redistributing it (D) does not address whether it is needed", "s": "amey", "ref": "Set 3, Q4", "set": "3", "fixed": 1},
+{"d": 4, "q": "Which sequencing is correct when introducing Claude to a recurring team process?", "o": ["Automate the whole process, then refine", "Start with the step that is bounded and checkable, prove it, then extend", "Start with the hardest step, since it has most value", "Let each person adopt it however they prefer"], "a": [1], "e": "A bounded first step produces evidence and trust cheaply. Full automation first (A) risks everything at once, the hardest step (C) is the least likely to succeed early, and uncoordinated adoption (D) produces drift", "s": "amey", "ref": "Set 3, Q5", "set": "3", "fixed": 1},
+{"d": 6, "q": "A policy forbids sending customer data to external services. A colleague asks Claude to summarise a customer email. What applies?", "o": ["Nothing, because summarising is not sending", "The policy only if the customer is named", "Nothing, because the output stays internal", "The policy, since the email is customer data"], "a": [3], "e": "Submitting the content is the act the policy governs. Framing it as summarising (A) or by where the output goes (C) misreads the policy, and it is not limited to named individuals (B)", "s": "amey", "ref": "Set 3, Q6", "set": "3", "fixed": 1},
+{"d": 6, "q": "What is the correct response to a request that a model output be presented as human-written to a customer?", "o": ["Decline to misrepresent it, and raise the disclosure question with whoever owns the relationship", "Comply, since the customer cares about quality not provenance", "Comply if the output was heavily edited", "Comply and record the decision internally"], "a": [0], "e": "Actively misrepresenting provenance is the issue, and it belongs to the person accountable for the relationship. Editing (C) and internal records (D) do not make the representation true, and quality (B) is not the point", "s": "amey", "ref": "Set 3, Q7", "set": "3", "fixed": 1},
+{"d": 1, "q": "A prompt asks for a recommendation and gets a balanced discussion instead. What is the most likely cause?", "o": ["The model is incapable of recommending", "The temperature is too high", "The prompt did not state that a single recommendation with a reason was required", "The input was too short"], "a": [2], "e": "Output shape follows the instruction, and no decision was requested. Incapability (A) is not the issue, and neither temperature (B) nor input length (D) determines whether a recommendation is given", "s": "amey", "ref": "Set 3, Q8", "set": "3", "fixed": 1},
+{"d": 1, "q": "What is the most effective way to get output pitched at the right level for a specific audience?", "o": ["Ask for it to be clear", "Ask for a shorter response", "Ask for simpler words", "Name the audience and what they already know"], "a": [3], "e": "Naming the reader and their prior knowledge is what calibrates level. Clarity (A), length (B), and vocabulary (C) are consequences rather than the instruction", "s": "amey", "ref": "Set 3, Q9", "set": "3", "fixed": 1},
+{"d": 3, "q": "A colleague uses the largest model for every task including formatting. What should you point out?", "o": ["Nothing, capability is never wasted", "That the largest model is less accurate on simple tasks", "That matching the model to the work saves cost without losing anything on simple tasks", "That formatting should be done manually"], "a": [2], "e": "Fit-to-task is the principle, and simple work does not benefit from extra capability. Capability is not free (A), larger models are not less accurate on simple tasks (B), and manual work (D) is not the alternative", "s": "amey", "ref": "Set 3, Q10", "set": "3", "fixed": 1},
+{"d": 3, "q": "When does the choice of interface matter more than the choice of model?", "o": ["Never, the model determines the outcome", "When the obstacle is how people supply context and act on output, not the quality of the answer", "Only for very large teams", "Only when cost is constrained"], "a": [1], "e": "Where adoption or context-supply is the bottleneck, interface dominates. Treating the model as decisive (A) misses that, and neither team size (C) nor cost (D) defines the case", "s": "amey", "ref": "Set 3, Q11", "set": "3", "fixed": 1},
+{"d": 5, "q": "What is the risk of adding a document to project knowledge without removing the version it replaces?", "o": ["Both versions can be drawn on, producing answers that mix current and superseded material", "Storage cost", "Slower responses", "The project will refuse to answer"], "a": [0], "e": "Superseded material remains retrievable and contradicts the current version. Storage (B) and speed (C) are minor, and the project does not refuse (D)", "s": "amey", "ref": "Set 3, Q12", "set": "3", "fixed": 1},
+{"d": 5, "q": "Which is the better test of whether something belongs in project knowledge?", "o": ["Whether every conversation in the project would benefit from it", "Whether it is long enough to be worth uploading", "Whether it was recently created", "Whether it is confidential"], "a": [0], "e": "Recurrence across conversations is what distinguishes shared knowledge from prompt content. Length (B), recency (C), and sensitivity (D) are unrelated to that test", "s": "amey", "ref": "Set 3, Q13", "set": "3", "fixed": 1},
+{"d": 7, "q": "A previously reliable prompt now returns shorter answers than before. What is worth checking first?", "o": ["Whether the model is deprecated", "Whether the input or the instructions changed, including anything added to the project", "Whether the network is slow", "Whether the account has hit a limit"], "a": [1], "e": "A behavioral change points to a change in inputs or configuration. Deprecation (A), network (C), and limits (D) produce errors rather than shorter answers", "s": "amey", "ref": "Set 3, Q14", "set": "3", "fixed": 1},
+{"d": 7, "q": "Someone reports that Claude is wrong about a fact that it stated correctly last week. What is the most useful first question?", "o": ["Which model did you use", "How long was the conversation", "What exactly did you ask, and what did it reply", "Have you tried again"], "a": [2], "e": "The exact exchange is what makes the claim examinable. Model (A), length (B), and retrying (D) may matter later but none of them establishes what happened", "s": "amey", "ref": "Set 3, Q15", "set": "3", "fixed": 1},
+// Set 4 (uploaded Set-4.docx; Amey Thakur, MIT licence)
+{"d": 2, "q": "Claude summarizes a vendor contract for you and states that the termination clause requires 60 days' notice, citing section 14.2. You are about to send the summary to your legal team. What should you do first?", "o": ["Check section 14.2 of the contract and confirm the notice period before sending", "Send it, since Claude cited a specific section", "Ask Claude how confident it is and send if the confidence is high", "Rephrase the summary in more formal language, then send"], "a": [0], "e": "Specific-looking citations can be fabricated, and material bound for legal review requires verification against the source document. A specific citation is not evidence of accuracy (B), self-reported confidence is not a reliability signal (C), and rewording does nothing about correctness (D).", "s": "amey", "ref": "Set 4, Q1", "set": "4", "fixed": 1},
+{"d": 2, "q": "You ask Claude to draft a competitive analysis, and the output presents market share figures for three competitors without sources. The figures look plausible. What is the appropriate handling?", "o": ["Include the figures, since plausibility is sufficient for internal documents", "Verify each figure against a market research source and keep only what checks out, with citations", "Delete the figures and note that no market data was available", "Ask Claude to regenerate until the numbers stabilize across runs"], "a": [1], "e": "Unsourced quantitative claims are a classic hallucination surface; the professional move is verification against an authoritative source, keeping what survives. Plausibility is not accuracy (A), deleting everything discards genuinely verifiable material (C), and consistency across regenerations does not establish truth (D).", "s": "amey", "ref": "Set 4, Q2", "set": "4", "fixed": 1},
+{"d": 1, "q": "You need Claude to produce a quarterly report from meeting notes, a spreadsheet summary, and last quarter's report. The first attempt misses the required structure and tone. What is the most effective next step?", "o": ["Retry the identical prompt, since outputs vary between runs", "Switch to the most capable model and resend the same prompt", "Rewrite the prompt to state the role, the required sections in order, the tone, and attach last quarter's report as a format example", "Break the work into forty single-sentence prompts"], "a": [2], "e": "Structure, explicit constraints, and an example of the target format are the most effective fixes for a formatting and tone miss. Re-rolling (A) leaves the deficiency in place, a larger model does not learn unstated requirements (B), and over-fragmentation destroys coherence (D).", "s": "amey", "ref": "Set 4, Q3", "set": "4", "fixed": 1},
+{"d": 1, "q": "A colleague's prompt asks Claude to \"analyze our customer feedback and fix the problems.\" The output is generic. Which revision best applies task decomposition?", "o": ["Add \"be specific and detailed\" to the prompt", "Ask the same question three times and merge the answers", "Paste more feedback into the same prompt", "Ask first for a categorized list of complaint themes with counts, then for the top three by frequency, then for a proposed action per theme"], "a": [3], "e": "Decomposition turns a vague compound request into a sequence of verifiable steps, each with a concrete output. Vague intensifiers (A) do not add structure, repetition (B) multiplies the vagueness, and more input without more structure (C) usually worsens focus.", "s": "amey", "ref": "Set 4, Q4", "set": "4", "fixed": 1},
+{"d": 3, "q": "Your team drafts hundreds of short, routine customer replies daily, and cost and speed matter more than nuance. Occasionally a complex escalation needs careful reasoning. What is the sound model strategy?", "o": ["Use the most capable model for everything to maximize quality", "Use the fastest, lowest-cost model for routine replies and switch to a more capable model for the complex escalations", "Use the fastest model for everything, including escalations", "Alternate models randomly to balance the load"], "a": [1], "e": "B matches model choice to the task in both directions: the fast, low-cost model for routine replies and a more capable model for complex escalations. A wastes cost and speed on routine work, C underserves the cases that need depth, and D matches nothing to anything.", "s": "amey", "ref": "Set 4, Q5", "set": "4", "fixed": 1},
+{"d": 4, "q": "Your monthly close process involves collecting figures, drafting a variance commentary, and formatting a board pack. You want Claude to help durably, not just once. What is the strongest approach?", "o": ["Create a Project with the commentary conventions and prior packs as knowledge, plus instructions for the structure, and run each close inside it", "Paste everything into a fresh chat each month and ask for the pack", "Ask Claude to do the whole close autonomously, including pulling the figures", "Use Claude only for spellchecking the final pack"], "a": [0], "e": "Durable, repeated workflows belong in a Project where instructions and knowledge persist and improve. Re-pasting monthly (B) rebuilds context by hand every time, full autonomy over financial figures without review (C) ignores appropriate-use judgment, and spellchecking (D) forfeits the actual value.", "s": "amey", "ref": "Set 4, Q6", "set": "4", "fixed": 1},
+{"d": 4, "q": "A department head asks you whether Claude could \"handle our customer onboarding.\" What is the right first move?", "o": ["Say yes and start building immediately", "Map the onboarding steps, identify which involve drafting, summarizing, or lookup that Claude does well, and which need human judgment or system access it does not have", "Say no, since onboarding involves customer data", "Forward the question to Anthropic support"], "a": [1], "e": "The Associate's core skill is translating a business ask into a realistic division of labor: where Claude adds value, where humans stay, and what the limits are. Unqualified yes (A) and unqualified no (C) both skip the analysis, and support (D) does not know your process.", "s": "amey", "ref": "Set 4, Q7", "set": "4", "fixed": 1},
+{"d": 5, "q": "Your team's Project answers policy questions from an uploaded handbook. HR publishes a new handbook version. What must happen for the Project to stay trustworthy?", "o": ["Nothing; Claude will find the new version on its own", "Add the new handbook alongside the old one so both are available", "Replace the outdated handbook in the Project knowledge and spot-check answers against the new version", "Tell users to mention the new version in every prompt"], "a": [2], "e": "Project knowledge is maintained, not self-updating; stale sources are a quality defect the configurer owns. Claude does not fetch your internal documents on its own (A), keeping both versions invites contradictory answers (B), and pushing the burden onto every user (D) is not maintenance.", "s": "amey", "ref": "Set 4, Q8", "set": "4", "fixed": 1},
+{"d": 6, "q": "You want Claude to analyze churn patterns in an export that includes customer names, emails, and account numbers. Company policy forbids sharing personal data with external tools. What is the correct action?", "o": ["Upload the file, since churn analysis is an internal purpose", "Upload it but instruct Claude to ignore the personal columns", "Abandon the analysis", "Remove or pseudonymize the identifying columns first, then upload and analyze"], "a": [3], "e": "Make the task compliant, then do it: the identifiers are not needed for pattern analysis. Purpose does not override policy (A), an instruction to ignore data is not a control because the data still left the boundary (B), and abandoning the work (C) is unnecessary when anonymization enables it.", "s": "amey", "ref": "Set 4, Q9", "set": "4", "fixed": 1},
+{"d": 7, "q": "A prompt that worked well for weeks now produces off-target answers after your team added many new documents to the Project. What is the best first diagnostic?", "o": ["Check whether the newly added knowledge is diluting or contradicting the sources the answers should draw from", "Rewrite the prompt from scratch", "Switch to a larger model", "Delete the Project and start over"], "a": [0], "e": "The change that coincided with the regression is the first suspect: new knowledge can crowd out or conflict with the relevant sources. Rewriting the prompt (B), upgrading the model (C), or rebuilding everything (D) all treat symptoms before diagnosing the actual change.", "s": "amey", "ref": "Set 4, Q10", "set": "4", "fixed": 1},
+{"d": 2, "q": "Claude produces a competitor comparison table where one row is marked “data unavailable” and the rest are filled in. A colleague asks you to delete the empty row so the table looks complete. What is the right response?", "o": ["Delete the row, since an incomplete table undermines confidence", "Keep the row and its label, because the gap is itself a finding the reader needs", "Fill the row with a reasonable estimate and mark it as approximate", "Ask Claude to search harder until every row is populated"], "a": [1], "e": "A declared gap is information: it tells the reader where the analysis is thin. Deleting it (A) hides a limitation, an unmarked estimate (C) manufactures data, and pressing the model to fill the cell (D) invites fabrication rather than retrieval.", "s": "amey", "ref": "Set 4, Q11", "set": "4", "fixed": 1},
+{"d": 2, "q": "Two runs of the same prompt give different figures for the same metric. Which conclusion is supported?", "o": ["The higher figure is more likely correct because the model found more evidence", "The figures should be averaged to reduce variance", "Neither figure is established, and the metric must be checked against the source", "The prompt is fine and the model needs a longer context window"], "a": [2], "e": "Disagreement between runs shows the figure is not grounded in a reliable source, so neither is established. Preferring the larger number (A) is arbitrary, averaging (B) treats two unverified numbers as measurements, and context length (D) is unrelated to whether the figure is true.", "s": "amey", "ref": "Set 4, Q12", "set": "4", "fixed": 1},
+{"d": 2, "q": "You ask Claude to extract every payment term from a 40-page contract. The output lists four terms, cleanly formatted. What is the first check?", "o": ["Confirm the formatting is consistent across the four entries", "Ask Claude whether it found all of them", "Run it again at a higher temperature to surface more terms", "Read the contract's payment sections to confirm no term was omitted"], "a": [3], "e": "Extraction fails by omission more often than by error, and a tidy output gives no signal about completeness. Formatting (A) is cosmetic, self-report (B) is not evidence, and temperature (C) changes phrasing rather than recall.", "s": "amey", "ref": "Set 4, Q13", "set": "4", "fixed": 1},
+{"d": 2, "q": "A summary you commissioned states a conclusion that contradicts your own reading of the source. What should you do?", "o": ["Locate the passage the conclusion rests on and compare it against both readings", "Defer to the summary, since the model read the whole document", "Defer to your reading and treat the summary as wrong", "Ask a colleague which of the two sounds more plausible"], "a": [0], "e": "The disagreement is resolvable by returning to the passage in question, which settles it on evidence. Deferring either way (B, C) decides without checking, and canvassing opinion (D) substitutes plausibility for the source.", "s": "amey", "ref": "Set 4, Q14", "set": "4", "fixed": 1},
+{"d": 2, "q": "Claude produces a well-argued recommendation with no citations, on a topic where you have no expertise. What is the appropriate use of it?", "o": ["Adopt it, since the reasoning is internally consistent", "Treat it as a hypothesis to test against sources before acting", "Discard it, because unsourced output has no value", "Ask for citations and adopt whatever comes back"], "a": [1], "e": "Unsourced reasoning is a starting point, useful for structuring an enquiry but not for deciding. Internal consistency is not accuracy (A), the reasoning may still be useful (C), and citations produced on demand need the same verification as the claim (D).", "s": "amey", "ref": "Set 4, Q15", "set": "4", "fixed": 1},
+{"d": 4, "q": "A team wants Claude to draft weekly customer health summaries from support tickets, CRM notes, and usage data. Which design detail matters most for the output to stay useful over months?", "o": ["Choosing the largest available model", "Running the summary daily instead of weekly", "Defining what a health summary must contain and keeping that definition in one place the team maintains", "Letting each team member write their own prompt"], "a": [2], "e": "A stable, maintained definition of the deliverable is what keeps output consistent as people and inputs change. Model size (A) does not fix an undefined task, higher frequency (B) multiplies an unclear output, and per-person prompts (D) guarantee drift.", "s": "amey", "ref": "Set 4, Q16", "set": "4", "fixed": 1},
+{"d": 4, "q": "Which task in a monthly reporting process is the weakest candidate for delegation to Claude?", "o": ["Drafting the narrative summary from agreed figures", "Reformatting last month's report into the new template", "Extracting the top five variances from a spreadsheet export", "Deciding which underperforming account to escalate to the executive team"], "a": [3], "e": "The escalation decision carries accountability and depends on relationships and context the model does not hold. Drafting (A), reformatting (B), and extraction (C) are all bounded tasks with checkable output.", "s": "amey", "ref": "Set 4, Q17", "set": "4", "fixed": 1},
+{"d": 4, "q": "A process works well for one analyst and poorly for three others using the same prompt. What is the most likely cause?", "o": ["The prompt relies on context the first analyst supplies without noticing", "The other three need a more capable model", "The task is unsuitable for Claude", "The other three are using shorter inputs"], "a": [0], "e": "One person succeeding with the same prompt usually means they are contributing unstated context, such as knowing which file to attach or what good looks like. A model change (B) does not supply missing context, the task clearly works (C), and input length (D) is a symptom rather than a cause.", "s": "amey", "ref": "Set 4, Q18", "set": "4", "fixed": 1},
+{"d": 4, "q": "When is it appropriate to keep a human approval step in an otherwise automated Claude workflow?", "o": ["Always, since automation is inherently risky", "When the action is hard to reverse or carries external consequences", "Only while the workflow is new, then remove it", "Never, because approval steps defeat the purpose of automation"], "a": [1], "e": "Approval earns its cost where a mistake is expensive or hard to undo. Blanket approval (A) and blanket removal (D) both ignore the specific risk, and a time-based rule (C) removes the check regardless of what the action does.", "s": "amey", "ref": "Set 4, Q19", "set": "4", "fixed": 1},
+{"d": 6, "q": "A colleague proposes pasting a customer list into a prompt to draft personalised outreach. What is the correct handling?", "o": ["Proceed, since the prompt is not stored anywhere permanent", "Ask Claude to keep the names confidential", "Remove or replace identifying details before drafting, and reattach them afterwards", "Proceed but delete the conversation afterwards"], "a": [2], "e": "Working on anonymised data and reattaching identifiers afterwards achieves the task without exposing the personal data. Assumptions about storage (A) are not a control, an instruction to the model (B) is not a safeguard, and deleting afterwards (D) does not undo the disclosure.", "s": "amey", "ref": "Set 4, Q20", "set": "4", "fixed": 1},
+{"d": 6, "q": "Which statement about instructing a model not to do something is accurate?", "o": ["An instruction in the prompt is an enforceable control", "Instructions are enforceable if placed in a system prompt", "Instructions are enforceable if repeated several times", "An instruction shapes behavior but does not guarantee it, so controls belong outside the prompt"], "a": [3], "e": "Prompt instructions influence behavior and are not guarantees, so anything that must hold is enforced in the surrounding system. Placement (B) and repetition (C) change the strength of the steer, not its nature, and treating it as enforcement (A) is the error the question tests.", "s": "amey", "ref": "Set 4, Q21", "set": "4", "fixed": 1},
+{"d": 6, "q": "A regulated report drafted with Claude is about to be filed. What is the reviewer accountable for?", "o": ["The accuracy and compliance of the filed document, regardless of how it was drafted", "Confirming that Claude was used according to policy", "Confirming the prompt included the relevant regulations", "Recording which model version produced the draft"], "a": [0], "e": "Accountability sits with the person who files, and the tool used does not transfer it. Policy compliance (B), prompt content (C), and version records (D) are all reasonable practices that do not replace responsibility for the document.", "s": "amey", "ref": "Set 4, Q22", "set": "4", "fixed": 1},
+{"d": 6, "q": "When is disclosing that AI assisted a piece of work most clearly warranted?", "o": ["Whenever any AI tool touched the work at any stage", "When the audience's judgment of the work depends on how it was produced", "Only when the output is published externally", "Only when a written policy requires it"], "a": [1], "e": "Disclosure matters where provenance would change how a reader weighs the work. A universal rule (A) makes the signal meaningless, and confining it to external publication (C) or written policy (D) misses internal cases where it genuinely matters.", "s": "amey", "ref": "Set 4, Q23", "set": "4", "fixed": 1},
+{"d": 1, "q": "A prompt produces output that is accurate but consistently too long. What is the most reliable fix?", "o": ["Add “be concise” to the prompt", "Ask for a summary of the output afterwards", "State the limit in concrete terms, such as a word count or a number of bullet points", "Use a smaller model"], "a": [2], "e": "Concrete limits are checkable and reproducible in a way that adjectives are not. “Be concise” (A) is interpreted differently each run, summarising afterwards (B) adds a step and a second failure point, and a smaller model (D) trades accuracy for brevity.", "s": "amey", "ref": "Set 4, Q24", "set": "4", "fixed": 1},
+{"d": 1, "q": "You need output in a specific structure every time so it can be pasted into a template. What is the most effective technique?", "o": ["Describing the structure in prose at the end of the prompt", "Asking for the output to be well organized", "Requesting the output twice and taking the better one", "Providing a filled example of the exact structure you want"], "a": [3], "e": "An example specifies the target unambiguously and is the strongest available signal for format. Prose description (A) leaves room for interpretation, a vague request (B) leaves more, and generating twice (C) does not define the target at all.", "s": "amey", "ref": "Set 4, Q25", "set": "4", "fixed": 1},
+{"d": 1, "q": "A long prompt with many rules produces output that follows some rules and ignores others. What should you try first?", "o": ["Separating the task into stages so each output is checked before the next", "Repeating the ignored rules in capitals", "Moving all the rules to the top of the prompt", "Adding a rule that says all rules must be followed"], "a": [0], "e": "Splitting the work reduces how much must hold at once and gives a checkpoint between stages. Emphasis (B), ordering (C), and a meta-rule (D) all leave the same load in a single step.", "s": "amey", "ref": "Set 4, Q26", "set": "4", "fixed": 1},
+{"d": 1, "q": "Which detail most improves a prompt asking Claude to review a document?", "o": ["Stating that the review should be thorough", "Stating what the review is for and what would count as a problem", "Attaching several similar documents for comparison", "Asking for the review as a numbered list"], "a": [1], "e": "Purpose and criteria tell the model what to look for, which is what a review depends on. Thoroughness (A) is unmeasurable, extra documents (C) add noise without criteria, and formatting (D) shapes presentation rather than substance.", "s": "amey", "ref": "Set 4, Q27", "set": "4", "fixed": 1},
+{"d": 3, "q": "A task involves reading a 200-page report once and answering a single question. Which consideration should lead the choice?", "o": ["The cheapest model available, since the task runs once", "Whether the model supports the fastest response time", "Whether the model can hold and reason over the whole document reliably", "Whether the task can be split across several small models"], "a": [2], "e": "The binding constraint is reliable comprehension across a long document, which is what the choice must satisfy. Cost (A) and speed (B) matter only among models that can do the task, and splitting (D) risks losing the cross-document reasoning the question needs.", "s": "amey", "ref": "Set 4, Q28", "set": "4", "fixed": 1},
+{"d": 3, "q": "When does working in a Claude project make more sense than an API integration?", "o": ["When the volume is high and predictable", "When the output must be inserted into another system automatically", "When the task must run on a schedule", "When the work is exploratory and done by people rather than systems"], "a": [3], "e": "Projects suit human, iterative work where the context is curated and reused by people. High volume (A), programmatic handoff (B), and scheduling (C) all describe system integration, which is what the API is for.", "s": "amey", "ref": "Set 4, Q29", "set": "4", "fixed": 1},
+{"d": 3, "q": "A team asks whether to move to a larger model because outputs are inconsistent. What should be established first?", "o": ["Whether the inconsistency comes from the prompt and the inputs rather than the model", "The cost difference between the two models", "Whether the larger model is available in their region", "How much faster the current model is"], "a": [0], "e": "Inconsistency usually traces to an underspecified task or variable inputs, which a larger model does not fix. Cost (B), availability (C), and speed (D) are inputs to a decision that has not yet been shown to be the right one.", "s": "amey", "ref": "Set 4, Q30", "set": "4", "fixed": 1},
+{"d": 5, "q": "What belongs in a project's knowledge rather than in individual prompts?", "o": ["The specific question being asked today", "Material that every conversation in the project should be able to draw on", "The preferred output length for one report", "A one-off document being reviewed this week"], "a": [1], "e": "Project knowledge holds what recurs, so each conversation starts from the same base. Today's question (A), a single formatting preference (C), and a one-off document (D) all belong in the prompt that needs them.", "s": "amey", "ref": "Set 4, Q31", "set": "4", "fixed": 1},
+{"d": 5, "q": "A project's answers have grown vaguer as more documents were added. What is the likely cause?", "o": ["The model version changed", "The project has too few documents to ground answers", "The knowledge now holds overlapping or outdated material competing with the right sources", "The prompts have become too specific"], "a": [2], "e": "Accumulated, unmaintained knowledge dilutes retrieval, and the symptom is exactly this drift toward vagueness. A version change (A) is unrelated to what was added, and both too few documents (B) and overly specific prompts (D) contradict the described trend.", "s": "amey", "ref": "Set 4, Q32", "set": "4", "fixed": 1},
+{"d": 5, "q": "How should project knowledge be treated as the underlying material changes?", "o": ["It updates automatically from the source systems", "It only needs review when answers are visibly wrong", "It should be rebuilt from scratch each quarter", "It must be maintained deliberately, because it does not update itself"], "a": [3], "e": "Project knowledge is a curated copy and stays as accurate as the person maintaining it. It does not sync (A), waiting for visible errors (B) means acting after the damage, and periodic rebuilds (C) are wasteful and still unscheduled against real change.", "s": "amey", "ref": "Set 4, Q33", "set": "4", "fixed": 1},
+{"d": 7, "q": "A workflow that has run reliably for months begins returning off-target output. What is the first diagnostic step?", "o": ["Establish what changed: the inputs, the configuration, or the knowledge", "Rewrite the prompt from scratch", "Switch to a different model", "Increase the amount of context supplied"], "a": [0], "e": "A working system that degrades points to a change, and identifying it is faster and safer than rebuilding. Rewriting (B), switching models (C), and adding context (D) all alter the system before the cause is known.", "s": "amey", "ref": "Set 4, Q34", "set": "4", "fixed": 1},
+{"d": 7, "q": "Output quality is acceptable but the process takes too long to be worth using. What should be examined first?", "o": ["Whether a faster model would meet the quality bar", "Whether the slow part is the model or the human steps around it", "Whether the prompt can be shortened", "Whether the task should be abandoned"], "a": [1], "e": "Locating the actual delay comes before optimising anything, and in practice the surrounding steps often dominate. Changing the model (A) or the prompt (C) assumes the model is the bottleneck, and abandoning (D) discards a process that already produces acceptable output.", "s": "amey", "ref": "Set 4, Q35", "set": "4", "fixed": 1},
+
+];
+const DOMAINS = {
+  1:{name:"Prompting and Task Execution",w:14,n:8},
+  2:{name:"Output Evaluation and Validation",w:21,n:13},
+  3:{name:"Product and Model Selection",w:12,n:7},
+  4:{name:"Workflow Integration and Solution Design",w:16,n:10},
+  5:{name:"Configuration and Knowledge Management",w:12,n:7},
+  6:{name:"Governance, Risk, and Responsible Use",w:15,n:9},
+  7:{name:"Troubleshooting and Optimization",w:10,n:6}
+};
+const PASS = 720, EXAM_MIN = 120, LS_KEY = "ccaof.attempts.v1", LS_RUN = "ccaof.inprogress.v1";
+
+// ---- ids, seeded shuffles
+(function(){const c={};QUESTIONS.forEach(q=>{c[q.d]=(c[q.d]||0)+1;q.id="d"+q.d+"-"+String(c[q.d]).padStart(2,"0")})})();
+const QBY = Object.fromEntries(QUESTIONS.map(q=>[q.id,q]));
+function hash(s){let h=2166136261;for(const ch of s){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(arr,r){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// option order per question is fixed (seeded) so answers never sit in the same slot
+const ORDER = Object.fromEntries(QUESTIONS.map(q=>[q.id,q.fixed?q.o.map((_,i)=>i):shuffle(q.o.map((_,i)=>i),rng(hash(q.id)))]));
+const SOURCES={amey:{name:"Amey Thakur, CLAUDE-CERTIFICATIONS (MIT licence)",url:"https://amey-thakur.github.io/CLAUDE-CERTIFICATIONS/associate-foundations/practice-questions.html"},upload5:{name:"Your uploaded Set 5 (ExamTopics)",url:"https://www.examtopics.com/exams/anthropic/ccao-f/view/"},prepclubs:{name:"PrepClubs free sample, rewritten in new words",url:"https://prepclubs.com/tests/claude-certified-associate"}};
+function srcLine(q){const s=SOURCES[q.s];return `<div class="note" style="margin-top:6px">Source: ${s?`<a href="${s.url}" target="_blank" rel="noopener" style="color:inherit">${esc(s.name)}</a>${q.ref?" · "+esc(q.ref):""}`:"written for this app"}</div>`}
+
+// ---- exam sets: one per uploaded set (q.set), questions kept in the order of the source file
+const SETS = [...new Set(QUESTIONS.map(q=>q.set).filter(Boolean))].map(name=>({key:"upload-set-"+name,name:"Set "+name,ids:QUESTIONS.filter(q=>q.set===name).map(q=>q.id)}));
+const examMinutes=n=>n*2; // the real exam allows 2 minutes per question
+const canRandom=()=>Object.keys(DOMAINS).every(d=>QUESTIONS.filter(q=>q.d==d).length>=DOMAINS[d].n);
+function randomExam(){const r=rng(Date.now());const ids=[];for(const d in DOMAINS){ids.push(...shuffle(QUESTIONS.filter(q=>q.d==d),r).slice(0,DOMAINS[d].n).map(q=>q.id))}return shuffle(ids,r)}
+
+// ---- storage: per-person store when the page runs on claude.ai, browser storage as a backup
+const store={db:null,col:null,attempts:[],ready:false,mode:"browser"};
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}
+function lsSet(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function mergeAttempts(list){const m=new Map(store.attempts.map(a=>[a.id,a]));list.forEach(a=>a&&a.id&&m.set(a.id,a));store.attempts=[...m.values()].sort((a,b)=>a.ts-b.ts)}
+async function initStore(){
+  mergeAttempts(lsGet(LS_KEY)||[]);
+  store.ready=true;render();
+  try{
+    if(!window.claude||!window.claude.use)return;
+    const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+    const uid=user?await user.id():null;
+    if(!db||!uid)return;
+    store.col=db.collection("data/users/"+uid);
+    const snap=await Promise.race([store.col.get(),new Promise((_,rej)=>setTimeout(()=>rej("timeout"),10000))]);
+    const remote=snap.docs.map(d=>d.data());
+    const remoteIds=new Set(remote.map(a=>a.id));
+    mergeAttempts(remote);
+    store.mode="account";
+    // push any attempts that only exist in this browser
+    for(const a of store.attempts){if(!remoteIds.has(a.id)){try{await store.col.doc(a.id).set(a)}catch(e){}}}
+    lsSet(LS_KEY,store.attempts);render();
+  }catch(e){store.col=null}
+}
+async function saveAttempt(a){
+  mergeAttempts([a]);lsSet(LS_KEY,store.attempts);
+  if(store.col){try{await store.col.doc(a.id).set(a)}catch(e){}}
+}
+async function clearAll(){
+  const ids=store.attempts.map(a=>a.id);store.attempts=[];lsSet(LS_KEY,[]);
+  if(store.col){for(const id of ids){try{await store.col.doc(id).delete()}catch(e){}}}
+}
+
+// ---- stats
+function latestByQuestion(){const m={};for(const a of store.attempts)for(const [id,ok] of a.answers||[])if(QBY[id])m[id]=ok;return m}
+function domainStats(){
+  const last=latestByQuestion(),tot={},seen={},right={},ans={},ansR={};
+  for(const q of QUESTIONS){tot[q.d]=(tot[q.d]||0)+1;if(q.id in last){seen[q.d]=(seen[q.d]||0)+1;if(last[q.id])right[q.d]=(right[q.d]||0)+1}}
+  for(const a of store.attempts)for(const [id,ok] of a.answers||[]){const d=QBY[id]?.d;if(!d)continue;ans[d]=(ans[d]||0)+1;if(ok)ansR[d]=(ansR[d]||0)+1}
+  const out={};for(const d in DOMAINS)out[d]={total:tot[d]||0,seen:seen[d]||0,mastered:right[d]||0,answered:ans[d]||0,accuracy:ans[d]?(ansR[d]||0)/ans[d]:null};
+  return out;
+}
+const exams=()=>store.attempts.filter(a=>a.kind==="exam");
+const pct=x=>x==null?"–":Math.round(x*100)+"%";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtDate=ts=>new Date(ts).toLocaleDateString(undefined,{day:"numeric",month:"short"})+" "+new Date(ts).toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+const fmtDur=s=>{const m=Math.floor(s/60);return m>=60?Math.floor(m/60)+"h "+(m%60)+"m":m+"m "+(s%60)+"s"};
+const L="ABCDEFG";
+
+// ---- routing
+let view="dashboard", run=null, result=null, confirmReset=false;
+const app=document.getElementById("app");
+function go(v){if(location.hash!=="#"+v)location.hash=v;else{view=v;render()}}
+window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(["dashboard","practice","exams"].includes(h)){view=h;result=null;if(run&&run.kind==="practice")run=null;render()}});
+function setTabs(){document.querySelectorAll("nav.tabs a").forEach(a=>{if(a.dataset.v===view)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")})}
+
+function render(){
+  setTabs();
+  if(run){return run.kind==="exam"?renderExam():renderPractice()}
+  if(result)return renderResult();
+  if(view==="practice")return renderPracticeHome();
+  if(view==="exams")return renderExamsHome();
+  renderDashboard();
+}
+
+// ---- dashboard
+function renderDashboard(){
+  const ds=domainStats(),ex=exams(),last=ex[ex.length-1],best=ex.reduce((m,a)=>Math.max(m,a.score),0);
+  const lastQ=latestByQuestion(),seen=Object.keys(lastQ).length;
+  let ans=0,ok=0;store.attempts.forEach(a=>(a.answers||[]).forEach(([id,c])=>{if(!QBY[id])return;ans++;if(c)ok++}));
+  const weak=Object.entries(ds).filter(([,s])=>s.accuracy!=null).sort((a,b)=>a[1].accuracy-b[1].accuracy)[0];
+  const resume=validRun();
+  app.innerHTML=`<div class="stack">
+  ${QUESTIONS.length?"":`<div class="banner"><span><b>The question bank is empty.</b> Add questions and practice rounds and exam sets will appear here. Your past scores stay in the history below.</span></div>`}
+  <div><div class="eyebrow">Claude Certified Associate · Foundations</div><h1>Your progress</h1>
+  <p class="lede">60 questions in 120 minutes, pass mark 720 of 1000. Practise by domain, then sit full exam sets to check you are ready.</p></div>
+  ${resume?`<div class="banner"><span>You have an unfinished exam: <b>${esc(resume.title)}</b>, question ${resume.i+1} of ${resume.ids.length}.</span><button class="primary" data-act="resume">Resume exam</button></div>`:""}
+  <div class="kpis">
+    <div class="kpi"><div class="eyebrow">Latest exam</div><div class="v">${last?last.score:"–"}<span style="font-size:14px;color:var(--muted)">/1000</span></div><div class="s">${last?`<span class="pill ${last.score>=PASS?"pass":"fail"}">${last.score>=PASS?"Pass":"Below 720"}</span> ${esc(last.title)}`:`<span class="pill none">Not taken</span>`}</div></div>
+    <div class="kpi"><div class="eyebrow">Best exam</div><div class="v">${ex.length?best:"–"}</div><div class="s">${ex.length} exam${ex.length===1?"":"s"} taken</div></div>
+    <div class="kpi"><div class="eyebrow">Questions seen</div><div class="v">${seen}<span style="font-size:14px;color:var(--muted)">/${QUESTIONS.length}</span></div><div class="s">${ans} answers in total</div></div>
+    <div class="kpi"><div class="eyebrow">Accuracy</div><div class="v">${ans?pct(ok/ans):"–"}</div><div class="s">${weak?`Weakest: D${weak[0]} at ${pct(weak[1].accuracy)}`:"Answer a few questions to see this"}</div></div>
+  </div>
+  <section class="panel"><div class="row" style="justify-content:space-between;margin-bottom:6px"><h2>Domain mastery</h2><span class="note">Bar: share of each domain's questions you got right last time. Tick marks 72%.</span></div>
+    <div class="domains">${Object.entries(DOMAINS).map(([d,D])=>{const s=ds[d];const m=s.total?s.mastered/s.total:0;return `<div class="drow">
+      <div class="dcode">D${d}</div>
+      <div><div class="dname">${D.name}</div><div class="dmeta">${D.w}% of exam · ${s.seen}/${s.total} seen · accuracy ${pct(s.accuracy)}</div></div>
+      <div class="bar target" role="img" aria-label="${Math.round(m*100)} percent mastered"><i style="width:${m*100}%"></i></div>
+      <div class="dpct">${Math.round(m*100)}%</div></div>`}).join("")}</div>
+  </section>
+  <section class="panel chart"><h2 style="margin-bottom:10px">Exam scores over time</h2>${examChart(ex)}</section>
+  <section class="panel"><h2 style="margin-bottom:10px">Recent activity</h2>${historyTable()}</section>
+  <div class="row" style="justify-content:flex-end">${confirmReset?`<span class="note">This deletes every saved attempt.</span><button class="ghost" data-act="cancel-reset">Keep my progress</button><button class="danger" data-act="do-reset">Delete all progress</button>`:`<span class="note">${store.mode==="account"?"Progress is saved to your Claude account.":"Progress is saved in this browser."}</span>${store.attempts.length?`<button class="ghost" data-act="reset">Reset progress</button>`:""}`}</div>
+  </div>`;
+}
+function examChart(ex){
+  if(!ex.length)return `<div class="empty">No full exams yet. Your scores will plot here against the 720 pass line. <button class="primary" style="margin-left:8px" data-go="exams">Start an exam</button></div>`;
+  const W=720,H=240,p={l:44,r:16,t:14,b:30},iw=W-p.l-p.r,ih=H-p.t-p.b,n=ex.length;
+  const x=i=>p.l+(n===1?iw/2:i*iw/(n-1)),y=v=>p.t+ih-(v/1000)*ih;
+  const grid=[0,250,500,750,1000].map(v=>`<line x1="${p.l}" x2="${W-p.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${p.l-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">${v}</text>`).join("");
+  const pts=ex.map((a,i)=>[x(i),y(a.score)]);
+  const line=pts.map((q,i)=>(i?"L":"M")+q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" ");
+  const area=n>1?`<path d="${line} L${pts[n-1][0]} ${y(0)} L${pts[0][0]} ${y(0)} Z" fill="var(--accent)" opacity=".1"/>`:"";
+  const dots=ex.map((a,i)=>`<circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="${i===n-1?6:4}" fill="${a.score>=PASS?"var(--good)":"var(--bad)"}" stroke="var(--surface)" stroke-width="2"><title>${esc(a.title)}: ${a.score}</title></circle>`).join("");
+  const labels=ex.map((a,i)=>(n<=12||i%Math.ceil(n/12)===0||i===n-1)?`<text x="${pts[i][0]}" y="${H-10}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">#${i+1}</text>`:"").join("");
+  const lastLbl=`<text x="${Math.min(pts[n-1][0]+10,W-p.r-30)}" y="${pts[n-1][1]-10}" font-size="12" fill="var(--fg)" font-family="var(--f-mono)">${ex[n-1].score}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Exam scores">${grid}
+  <line x1="${p.l}" x2="${W-p.r}" y1="${y(PASS)}" y2="${y(PASS)}" stroke="var(--warn)" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W-p.r}" y="${y(PASS)-6}" text-anchor="end" font-size="11" fill="var(--warn)" font-family="var(--f-mono)">PASS 720</text>
+  ${area}<path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>${dots}${labels}${lastLbl}</svg>`;
+}
+function historyTable(){
+  const list=store.attempts.slice(-12).reverse();
+  if(!list.length)return `<div class="empty">Nothing yet. Start with a short practice round in your weakest-looking domain. <button class="primary" style="margin-left:8px" data-go="practice">Practise now</button></div>`;
+  return `<div class="tablewrap"><table class="hist"><thead><tr><th>When</th><th>Activity</th><th>Result</th><th>Time</th></tr></thead><tbody>${list.map(a=>`<tr>
+  <td class="num">${fmtDate(a.ts)}</td><td>${esc(a.title)}</td>
+  <td class="num">${a.kind==="exam"?`${a.score} <span class="pill ${a.score>=PASS?"pass":"fail"}">${a.score>=PASS?"pass":"fail"}</span>`:`${a.correct}/${a.total} · ${pct(a.correct/a.total)}`}</td>
+  <td class="num">${fmtDur(a.dur||0)}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+// ---- practice
+let pOpts={mode:"unseen",size:"10"};
+function renderPracticeHome(){
+  const ds=domainStats();
+  app.innerHTML=`<div class="stack">
+  <div><div class="eyebrow">Section-wise practice</div><h1>Practise by domain</h1><p class="lede">You see the answer and explanation after each question. Pick a domain, choose how many questions and which ones.</p></div>
+  <div class="opts panel">
+    <label for="p-mode">Questions<select id="p-mode"><option value="unseen">Unseen first</option><option value="missed">Ones I got wrong</option><option value="all">Random from all</option></select></label>
+    <label for="p-size">Round length<select id="p-size"><option value="10">10 questions</option><option value="20">20 questions</option><option value="all">Whole domain</option></select></label>
+  </div>
+  <div class="grid">${Object.entries(DOMAINS).map(([d,D])=>{const s=ds[d];const m=s.total?s.mastered/s.total:0;const missed=missedIn(d).length;return `<div class="card">
+    <div class="row" style="justify-content:space-between"><span class="dcode">D${d} · ${D.w}%</span><span class="pill ${s.accuracy==null?"none":s.accuracy>=.72?"pass":"warn"}">${s.accuracy==null?"new":pct(s.accuracy)+" acc."}</span></div>
+    <h3>${D.name}</h3>
+    <p>${s.total} questions · ${s.seen} seen · ${missed} to retry</p>
+    <div class="bar target"><i style="width:${m*100}%"></i></div>
+    <div class="foot"><span class="note">${Math.round(m*100)}% mastered</span><button class="primary" data-start="${d}" ${s.total?"":"disabled"}>Start</button></div></div>`}).join("")}
+    <div class="card"><div class="row" style="justify-content:space-between"><span class="dcode">ALL</span><span class="pill none">mixed</span></div><h3>Mixed review</h3><p>Questions from every domain, using the options above.</p><div class="foot"><span class="note">${QUESTIONS.length} questions</span><button class="primary" data-start="all" ${QUESTIONS.length?"":"disabled"}>Start</button></div></div>
+  </div></div>`;
+  const m=document.getElementById("p-mode"),s=document.getElementById("p-size");m.value=pOpts.mode;s.value=pOpts.size;
+  m.onchange=()=>pOpts.mode=m.value;s.onchange=()=>pOpts.size=s.value;
+}
+function missedIn(d){const last=latestByQuestion();return QUESTIONS.filter(q=>(d==="all"||q.d==d)&&last[q.id]===0)}
+function startPractice(d){
+  const last=latestByQuestion(),r=rng(Date.now());
+  let pool=QUESTIONS.filter(q=>d==="all"||q.d==d);
+  if(pOpts.mode==="missed"){pool=pool.filter(q=>last[q.id]===0);if(!pool.length){flash("No missed questions in this domain yet. Try 'Unseen first'.");return}pool=shuffle(pool,r)}
+  else if(pOpts.mode==="unseen"){const un=shuffle(pool.filter(q=>!(q.id in last)),r),se=shuffle(pool.filter(q=>q.id in last),r);pool=[...un,...se]}
+  else pool=shuffle(pool,r);
+  if(!pool.length){flash("No questions in this domain yet.");return}
+  const n=pOpts.size==="all"?pool.length:Math.min(+pOpts.size,pool.length);
+  run={kind:"practice",domain:d,title:d==="all"?"Practice · Mixed":"Practice · D"+d+" "+DOMAINS[d].name,ids:pool.slice(0,n).map(q=>q.id),i:0,sel:{},checked:{},start:Date.now()};
+  render();window.scrollTo(0,0);
+}
+function renderPractice(){
+  const q=QBY[run.ids[run.i]],sel=run.sel[q.id]||[],done=run.checked[q.id],multi=q.a.length>1;
+  const correctN=Object.keys(run.checked).filter(id=>isRight(QBY[id],run.sel[id])).length;
+  app.innerHTML=`<div class="runner">
+  <div class="rhead"><div class="grow"><div class="eyebrow">${esc(run.title)}</div></div><span class="num note">${correctN} right · ${Object.keys(run.checked).length} checked</span><button class="ghost" data-act="quit">End round</button></div>
+  <div class="progress"><i style="width:${(run.i+(done?1:0))/run.ids.length*100}%"></i></div>
+  <div class="panel">
+    <div class="eyebrow" style="margin-bottom:8px">Question ${run.i+1} of ${run.ids.length} · D${q.d}</div>
+    <p class="qtext">${esc(q.q)}</p>${multi?`<div class="qhint">Select ${q.a.length} answers.</div>`:""}
+    <div class="choices">${choicesHTML(q,sel,done)}</div>
+    ${done?`<div class="explain"><b>${isRight(q,sel)?"Correct.":"Not quite. Correct: "+correctLetters(q)}</b>${esc(q.e)}${srcLine(q)}</div>`:""}
+    <div class="row" style="justify-content:flex-end">${done?`<button class="primary" data-act="pnext">${run.i===run.ids.length-1?"See results":"Next question"}</button>`:`<button class="primary" data-act="check" ${sel.length===q.a.length?"":"disabled"}>Check answer</button>`}</div>
+  </div></div>`;
+}
+function choicesHTML(q,sel,reveal){
+  return ORDER[q.id].map((oi,pos)=>{
+    let cls="";if(reveal){if(q.a.includes(oi))cls="correct";else if(sel.includes(oi))cls="wrong"}
+    return `<button class="choice ${cls}" data-opt="${oi}" aria-pressed="${sel.includes(oi)}" ${reveal?"disabled":""}><span class="k">${L[pos]}</span><span>${esc(q.o[oi])}</span></button>`}).join("");
+}
+function correctLetters(q){return ORDER[q.id].map((oi,pos)=>q.a.includes(oi)?L[pos]:null).filter(Boolean).join(", ")}
+function isRight(q,sel){sel=sel||[];return sel.length===q.a.length&&q.a.every(x=>sel.includes(x))}
+function toggle(q,oi){
+  const cur=(run.sel[q.id]||[]).slice();const k=cur.indexOf(oi);
+  if(q.a.length===1){run.sel[q.id]=[oi];return}
+  if(k>=0)cur.splice(k,1);else{if(cur.length>=q.a.length)cur.shift();cur.push(oi)}
+  run.sel[q.id]=cur;
+}
+async function finishPractice(){
+  const ids=run.ids.filter(id=>run.checked[id]);
+  if(!ids.length){run=null;render();return}
+  const answers=ids.map(id=>[id,isRight(QBY[id],run.sel[id])?1:0]);
+  const a={id:"p"+Date.now().toString(36),kind:"practice",title:run.title,domain:run.domain,ts:Date.now(),dur:Math.round((Date.now()-run.start)/1000),total:ids.length,correct:answers.filter(x=>x[1]).length,answers,sel:Object.fromEntries(ids.map(id=>[id,run.sel[id]]))};
+  await saveAttempt(a);result=a;run=null;render();window.scrollTo(0,0);
+}
+
+// ---- exams
+function validRun(){const r=lsGet(LS_RUN);if(r&&!r.ids.every(id=>QBY[id])){lsSet(LS_RUN,null);return null}return r}
+function renderExamsHome(){
+  const ex=exams(),resume=validRun();
+  const card=(key,name,desc,n=60)=>{const mine=ex.filter(a=>a.set===key);const best=mine.reduce((m,a)=>Math.max(m,a.score),0);return `<div class="card">
+    <div class="row" style="justify-content:space-between"><span class="dcode">${n} Q · ${examMinutes(n)} MIN</span><span class="pill ${!mine.length?"none":best>=PASS?"pass":"fail"}">${!mine.length?"not taken":"best "+best}</span></div>
+    <h3>${name}</h3><p>${desc}</p>
+    <div class="foot"><span class="note">${mine.length} attempt${mine.length===1?"":"s"}</span><button class="primary" data-exam="${key}">Start exam</button></div></div>`};
+  app.innerHTML=`<div class="stack">
+  <div><div class="eyebrow">Full exam simulation</div><h1>Full exam sets</h1><p class="lede">Each set runs like the real exam: no feedback until you submit, and a timer of 2 minutes per question (120 minutes for 60) that submits for you when it reaches zero.</p></div>
+  ${resume?`<div class="banner"><span>Unfinished: <b>${esc(resume.title)}</b>, question ${resume.i+1} of ${resume.ids.length}.</span><button class="ghost" data-act="discard">Discard</button><button class="primary" data-act="resume">Resume</button></div>`:""}
+  <div class="grid">
+    ${SETS.map(s=>card(s.key,s.name,`Your uploaded ${s.name}, in its original order.`,s.ids.length)).join("")}
+    ${canRandom()?card("random","Random mix","60 new picks from the full bank each time, still matching the domain weights."):""}
+    ${!SETS.length&&!canRandom()?`<div class="empty" style="grid-column:1/-1">No exam sets yet. A full exam needs at least ${Object.values(DOMAINS).map(D=>D.n).join(", ")} questions in domains 1 to 7. The bank has ${QUESTIONS.length} right now.</div>`:""}
+  </div>
+  <div class="panel"><h3 style="margin-bottom:8px">Questions per domain in a full 60-question exam</h3><div class="tablewrap"><table class="hist"><thead><tr><th>Domain</th><th>Weight</th><th>Questions</th></tr></thead><tbody>${Object.entries(DOMAINS).map(([d,D])=>`<tr><td>D${d} ${D.name}</td><td class="num">${D.w}%</td><td class="num">${D.n}</td></tr>`).join("")}</tbody></table></div>
+  <p class="note" style="margin-top:10px">Question bank: ${QUESTIONS.length} questions.</p>
+  ${QUESTIONS.some(q=>q.s==="amey")?`<details class="note" style="margin-top:8px"><summary>Credits and licence</summary><p>Questions marked "Amey Thakur" come from <a href="https://github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS" target="_blank" rel="noopener" style="color:inherit">github.com/Amey-Thakur/CLAUDE-CERTIFICATIONS</a>, used under the MIT License: Copyright (c) 2026 Amey Thakur. Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></details>`:""}
+  <p class="note" style="margin-top:10px">Scores here are your share of correct answers on a 1000 scale. The real exam uses a scaled score, so treat 720 as a target, not an exact prediction.</p></div>
+  </div>`;
+}
+function startExam(key){
+  const s=SETS.find(x=>x.key===key);
+  run={kind:"exam",set:key,title:s?s.name:"Random mix",ids:s?s.ids.slice():randomExam(),i:0,sel:{},flags:{},start:Date.now(),deadline:Date.now()+examMinutes((s?s.ids:[]).length||60)*60000,confirm:false};
+  lsSet(LS_RUN,run);render();window.scrollTo(0,0);tick();
+}
+let timerId=null;
+function tick(){clearInterval(timerId);timerId=setInterval(()=>{if(!run||run.kind!=="exam"){clearInterval(timerId);return}
+  const left=run.deadline-Date.now();const el=document.getElementById("timer");
+  if(left<=0){clearInterval(timerId);finishExam(true);return}
+  if(el){el.textContent=fmtClock(left);el.classList.toggle("low",left<10*60000)}},1000)}
+const fmtClock=ms=>{const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/3600))+":"+String(Math.floor(s/60)%60).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+function renderExam(){
+  const q=QBY[run.ids[run.i]],sel=run.sel[q.id]||[],multi=q.a.length>1,answered=run.ids.filter(id=>(run.sel[id]||[]).length).length;
+  const unanswered=run.ids.length-answered,flagged=Object.values(run.flags).filter(Boolean).length,left=run.deadline-Date.now();
+  app.innerHTML=`<div class="runner">
+  <div class="rhead"><div class="grow"><div class="eyebrow">${esc(run.title)}</div></div><span class="timer ${left<600000?"low":""}" id="timer" aria-label="Time left">${fmtClock(left)}</span><button class="ghost" data-act="pause">Save and leave</button></div>
+  <div class="progress"><i style="width:${answered/run.ids.length*100}%"></i></div>
+  <div class="panel">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px"><div class="eyebrow">Question ${run.i+1} of ${run.ids.length}</div><button class="ghost" data-act="flag" aria-pressed="${!!run.flags[q.id]}" style="color:${run.flags[q.id]?"var(--warn)":"var(--muted)"}">${run.flags[q.id]?"Flagged for review":"Flag for review"}</button></div>
+    <p class="qtext">${esc(q.q)}</p>${multi?`<div class="qhint">Select ${q.a.length} answers.</div>`:""}
+    <div class="choices">${choicesHTML(q,sel,false)}</div>
+    <div class="row" style="justify-content:space-between"><button data-act="prev" ${run.i?"":"disabled"}>Previous</button>
+      <div class="row">${run.i<run.ids.length-1?`<button class="primary" data-act="next">Next</button>`:""}<button ${run.i===run.ids.length-1?'class="primary"':""} data-act="submit">Submit exam</button></div></div>
+    ${run.confirm?`<div class="confirm"><b>Submit now?</b> ${unanswered?`${unanswered} question${unanswered===1?" is":"s are"} unanswered and will count as wrong. `:"All questions answered. "}${flagged?`${flagged} flagged for review.`:""}<div class="row" style="margin-top:10px"><button data-act="cancel-submit">Keep working</button><button class="primary" data-act="do-submit">Submit and see score</button></div></div>`:""}
+  </div>
+  <div class="navgrid" aria-label="Question navigator">${run.ids.map((id,i)=>`<button data-jump="${i}" class="${(run.sel[id]||[]).length?"ans":""} ${i===run.i?"cur":""} ${run.flags[id]?"flag":""}" aria-label="Question ${i+1}">${i+1}</button>`).join("")}</div>
+  <p class="note" style="margin-top:10px">${answered}/${run.ids.length} answered · ${flagged} flagged. Shaded = answered, orange underline = flagged.</p>
+  </div>`;
+}
+async function finishExam(auto){
+  clearInterval(timerId);
+  const answers=run.ids.map(id=>[id,isRight(QBY[id],run.sel[id])?1:0]);const correct=answers.filter(x=>x[1]).length;
+  const per={};answers.forEach(([id,ok])=>{const d=QBY[id].d;per[d]=per[d]||[0,0];per[d][1]++;if(ok)per[d][0]++});
+  const a={id:"e"+Date.now().toString(36),kind:"exam",set:run.set,title:run.title,ts:Date.now(),dur:Math.round((Math.min(Date.now(),run.deadline)-run.start)/1000),total:run.ids.length,correct,score:Math.round(correct/run.ids.length*1000),per,answers,sel:run.sel,order:run.ids,auto:!!auto};
+  lsSet(LS_RUN,null);await saveAttempt(a);result=a;run=null;render();window.scrollTo(0,0);
+}
+
+// ---- results
+let reviewFilter="wrong";
+function renderResult(){
+  const a=result,isExam=a.kind==="exam",ids=a.order||a.answers.map(x=>x[0]),okMap=Object.fromEntries(a.answers);
+  const per={};a.answers.forEach(([id,ok])=>{const d=QBY[id]?.d;if(!d)return;per[d]=per[d]||[0,0];per[d][1]++;if(ok)per[d][0]++});
+  const list=ids.filter(id=>QBY[id]&&(reviewFilter==="all"||!okMap[id]));
+  app.innerHTML=`<div class="stack">
+  <div><div class="eyebrow">${esc(a.title)} · ${fmtDur(a.dur)}${a.auto?" · time ran out":""}</div><h1>${isExam?(a.score>=PASS?"You passed this set":"Not there yet"):"Round complete"}</h1></div>
+  <div class="panel score-hero">
+    <div class="score-big">${isExam?`${a.score}<small>/1000</small>`:`${a.correct}<small>/${a.total}</small>`}</div>
+    <div><span class="pill ${isExam?(a.score>=PASS?"pass":"fail"):(a.correct/a.total>=.72?"pass":"warn")}">${isExam?(a.score>=PASS?"Pass · 720+":"Below 720"):pct(a.correct/a.total)}</span>
+    <p class="note" style="margin:6px 0 0">${a.correct} of ${a.total} correct. ${isExam?(a.score>=PASS?"Keep the margin by reviewing the questions you missed.":`You need about ${Math.max(0,Math.ceil(PASS/1000*a.total)-a.correct)} more correct answers to reach 720.`):"Missed questions are saved, so you can retry them later."}</p></div>
+  </div>
+  <section class="panel"><h2 style="margin-bottom:6px">By domain</h2><div class="domains">${Object.entries(per).sort((x,y)=>x[0]-y[0]).map(([d,[c,t]])=>`<div class="drow"><div class="dcode">D${d}</div><div><div class="dname">${DOMAINS[d].name}</div><div class="dmeta">${c} of ${t} correct</div></div><div class="bar target"><i style="width:${c/t*100}%;background:${c/t>=.72?"var(--good)":"var(--bad)"}"></i></div><div class="dpct">${pct(c/t)}</div></div>`).join("")}</div></section>
+  <section class="stack" style="gap:12px"><div class="row" style="justify-content:space-between"><h2>Review answers</h2>
+    <div class="row"><select id="rf" aria-label="Which questions to show"><option value="wrong">Only ones I missed</option><option value="all">All questions</option></select></div></div>
+    <div class="review">${list.length?list.map(id=>reviewItem(QBY[id],(a.sel||{})[id]||[],ids.indexOf(id)+1)).join(""):`<div class="empty">Every answer was correct. Nothing to review.</div>`}</div></section>
+  <div class="row"><button class="primary" data-go="${isExam?"exams":"practice"}">${isExam?"Back to exams":"Practise again"}</button><button data-go="dashboard">Open dashboard</button></div>
+  </div>`;
+  const rf=document.getElementById("rf");rf.value=reviewFilter;rf.onchange=()=>{reviewFilter=rf.value;renderResult()};
+}
+function reviewItem(q,sel,n){
+  const ok=isRight(q,sel);
+  return `<div class="ritem"><div class="row" style="justify-content:space-between;margin-bottom:6px"><span class="eyebrow">Q${n} · D${q.d}</span><span class="pill ${ok?"pass":sel.length?"fail":"none"}">${ok?"correct":sel.length?"wrong":"skipped"}</span></div>
+  <p class="qtext">${esc(q.q)}</p><ul>${ORDER[q.id].map((oi,pos)=>`<li class="${q.a.includes(oi)?"c":sel.includes(oi)?"x":""}">${L[pos]}. ${esc(q.o[oi])}${sel.includes(oi)?" (your answer)":""}</li>`).join("")}</ul>
+  <div class="explain" style="margin:0">${esc(q.e)}${srcLine(q)}</div></div>`;
+}
+
+// ---- events
+let flashT;function flash(msg){let el=document.getElementById("flash");if(!el){el=document.createElement("div");el.id="flash";el.setAttribute("role","status");el.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:20;max-width:calc(100% - 32px)";document.body.appendChild(el)}el.textContent=msg;el.hidden=false;clearTimeout(flashT);flashT=setTimeout(()=>el.hidden=true,3200)}
+app.addEventListener("click",async e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.go){result=null;run=run&&run.kind==="exam"?run:null;go(b.dataset.go);return}
+  if(b.dataset.start){startPractice(b.dataset.start);return}
+  if(b.dataset.exam){if(lsGet(LS_RUN)){flash("Finish or discard your unfinished exam first.");return}startExam(b.dataset.exam);return}
+  if(b.dataset.opt!=null&&run){const q=QBY[run.ids[run.i]];if(run.kind==="practice"&&run.checked[q.id])return;toggle(q,+b.dataset.opt);if(run.kind==="exam")lsSet(LS_RUN,run);render();return}
+  if(b.dataset.jump!=null){run.i=+b.dataset.jump;run.confirm=false;lsSet(LS_RUN,run);render();return}
+  const act=b.dataset.act;
+  if(act==="check"){run.checked[run.ids[run.i]]=1;render()}
+  else if(act==="pnext"){if(run.i<run.ids.length-1){run.i++;render();window.scrollTo(0,0)}else finishPractice()}
+  else if(act==="quit")finishPractice();
+  else if(act==="next"){run.i++;run.confirm=false;lsSet(LS_RUN,run);render()}
+  else if(act==="prev"){run.i--;run.confirm=false;lsSet(LS_RUN,run);render()}
+  else if(act==="flag"){const id=run.ids[run.i];run.flags[id]=!run.flags[id];lsSet(LS_RUN,run);render()}
+  else if(act==="submit"){run.confirm=true;render()}
+  else if(act==="cancel-submit"){run.confirm=false;render()}
+  else if(act==="do-submit")finishExam(false);
+  else if(act==="pause"){lsSet(LS_RUN,run);clearInterval(timerId);run=null;go("exams");flash("Exam saved. The timer keeps running while you are away.")}
+  else if(act==="resume"){run=validRun();if(!run)return;if(Date.now()>=run.deadline){finishExam(true);return}run.confirm=false;render();tick()}
+  else if(act==="discard"){lsSet(LS_RUN,null);render()}
+  else if(act==="reset"){confirmReset=true;render()}
+  else if(act==="cancel-reset"){confirmReset=false;render()}
+  else if(act==="do-reset"){confirmReset=false;await clearAll();render();flash("Progress deleted.")}
+});
+document.addEventListener("keydown",e=>{
+  if(!run||e.target.closest("select"))return;const q=QBY[run.ids[run.i]];if(!q)return;const pos=L.indexOf(e.key.toUpperCase());
+  if(pos>=0&&pos<q.o.length&&!(run.kind==="practice"&&run.checked[q.id])){toggle(q,ORDER[q.id][pos]);if(run.kind==="exam")lsSet(LS_RUN,run);render()}
+});
+document.querySelector("nav.tabs").addEventListener("click",e=>{const a=e.target.closest("a");if(!a)return;if(run&&run.kind==="exam"){lsSet(LS_RUN,run);clearInterval(timerId);run=null;flash("Exam saved. Resume it from Full exams.")}result=null;if(run)run=null;if(location.hash==="#"+a.dataset.v){e.preventDefault();view=a.dataset.v;render()}});
+
+const h=location.hash.slice(1);if(["dashboard","practice","exams"].includes(h))view=h;
+initStore();
+</script>
+
+</body>
+</html>
